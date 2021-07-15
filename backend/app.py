@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.recaptcha import fields
 from forms import Todo
@@ -39,15 +39,15 @@ def name(first_name):
     return f'{first_name}'
 
 
-@app.route('/todo', methods=['GET', 'POST'])
+@app.route('/todo', methods=['POST'])
 def todo():
-    todo_form = Todo()
-    if todo_form.validate_on_submit():
-        todo = TodoModel(content=todo_form.content.data)
-        db.session.add(todo)
-        db.session.commit()
-        return redirect(url_for('home'))
-    return render_template('todo.html', form=todo_form)
+    request_data = json.loads(request.data)
+    todo = TodoModel(content=request_data['content'])
+
+    db.session.add(todo)
+    db.session.commit()
+
+    return {'201': 'todo created successfully'}
 
 if __name__ == '__main__':
     app.run(debug=True)    
