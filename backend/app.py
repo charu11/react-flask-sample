@@ -50,6 +50,10 @@ def todo():
 
     return {'201': 'todo created successfully'}
 
+@app.route('/home/<int:id>')
+def show(id):
+    return jsonify([*map(todo_serializer, TodoModel.query.filter_by(id=id))])
+
 
 if __name__ == '__main__':
     app.run(debug=True)    
