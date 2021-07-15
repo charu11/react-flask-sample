@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.recaptcha import fields
 from forms import Todo
@@ -16,22 +16,24 @@ class TodoModel(db.Model):
     content = db.Column(db.String(200))
 
     def __str__(self):
-        return f'{self.content, self.id}'
+        return f'{self.content} {self.id}'
 
 @app.route('/api', methods=['GET'])
 def api():
-    return "it is connected"
 
+    return jsonify({"hello": "world"})
 
+def todo_serializer(todo):
+    return {
+        'id': todo.id,
+        'content': todo.content
+    }
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 def home():
     todo = TodoModel.query.all()
-    if request.method == 'POST':
-        first_name = request.form['first_name']
-        return redirect(url_for('name', first_name=first_name))
-    return render_template('index.html', todo=todo)
-
+    return jsonify([*map(todo_serializer, todo)])
+    
 @app.route('/name/<string:first_name>')
 def name(first_name):
     return f'{first_name}'

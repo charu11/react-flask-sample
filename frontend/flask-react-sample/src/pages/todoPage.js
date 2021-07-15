@@ -5,20 +5,20 @@ export const TodoPage = () => {
   const [todo, setTodo] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/", {
+    fetch("/home", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
-      .then((res) => console.log(res))
+      .then((res) => setTodo(res))
       .catch((error) => console.log(error));
   });
 
   return (
     <>
-      <Card />
+      <Card listOfTodos={todo}/>
     </>
   );
 };
