@@ -30,11 +30,25 @@ export const TodoPage = () => {
         content: addTodo,
       }),
       headers: {
-        "Content-Type": "application/json; charset=UTF-8",
+        "Content-type": "application/json; charset=UTF-8",
       },
     })
       .then((res) => res.json())
-      .then((message) => console.log(message));
+      .then((message) => {
+        console.log(message);
+        setAddTodo("");
+        getLatestTodo();
+      });
+
+    const getLatestTodo = () => {
+      fetch("/home")
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+        })
+        .then((data) => setTodo(data));
+    };
   };
 
   return (

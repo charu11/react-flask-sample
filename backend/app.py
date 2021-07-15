@@ -32,6 +32,7 @@ def todo_serializer(todo):
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     todo = TodoModel.query.all()
+    print(todo)
     return jsonify([*map(todo_serializer, todo)])
     
 @app.route('/name/<string:first_name>')
@@ -48,6 +49,7 @@ def todo():
     db.session.commit()
 
     return {'201': 'todo created successfully'}
+
 
 if __name__ == '__main__':
     app.run(debug=True)    
